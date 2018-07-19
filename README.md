@@ -1,11 +1,11 @@
-# bassert
+# bsert
 
 Minimal assert with type checking.
 
 ## Usage
 
 ``` js
-const assert = require('bassert');
+const assert = require('bsert');
 ```
 
 ## Contribution and License Agreement
