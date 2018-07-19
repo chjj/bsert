@@ -1,6 +1,6 @@
 {
   "name": "bassert",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Minimal assert with type checking",
   "keywords": [
     "assert"
