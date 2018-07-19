@@ -1,0 +1,27 @@
+{
+  "name": "bassert",
+  "version": "0.0.0",
+  "description": "Minimal assert with type checking",
+  "keywords": [
+    "assert"
+  ],
+  "license": "MIT",
+  "repository": "git://github.com/chjj/bassert.git",
+  "homepage": "https://github.com/chjj/bassert",
+  "bugs": {
+    "url": "https://github.com/chjj/bassert/issues"
+  },
+  "author": "Christopher Jeffrey <chjjeffrey@gmail.com>",
+  "main": "./lib/assert.js",
+  "scripts": {
+    "lint": "eslint lib/ test/ || exit 0",
+    "test": "mocha --reporter spec test/*-test.js"
+  },
+  "devDependencies": {
+    "eslint": "^5.1.0",
+    "mocha": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  }
+}
