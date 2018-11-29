@@ -13,6 +13,9 @@
   },
   "author": "Christopher Jeffrey <chjjeffrey@gmail.com>",
   "main": "./lib/assert.js",
+  "scripts": {
+    "lint": "eslint lib/ || exit 0"
+  },
   "engines": {
     "node": ">=8.0.0"
   }
