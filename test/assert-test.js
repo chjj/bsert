@@ -137,9 +137,10 @@ function notEqual(a, b) {
 describe('Assert', function() {
   it('should have environment', () => {
     assert(typeof bsert === 'function');
-    assert(bsert.strict);
+    assert(bsert.assert == bsert);
     assert(bsert.strict === bsert);
-    assert(bsert.MAX_LENGTH === 300);
+    assert(bsert.ok == bsert);
+    assert(bsert.AssertionError)
   });
 
   it('should do assert', () => {
