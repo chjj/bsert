@@ -1,12 +1,6 @@
 'use strict';
 
-const assert = require('assert');
-const bsert = require('../');
-
-if (process.browser) {
-  assert.deepStrictEqual = bsert.deepStrictEqual;
-  assert.notDeepStrictEqual = bsert.notDeepStrictEqual;
-}
+const assert = require('../');
 
 function makeObj() {
   const now = 1544200539595;
@@ -56,302 +50,295 @@ function makeArr() {
 
 function equal(a, b) {
   assert.deepStrictEqual(a, b);
-  bsert.deepStrictEqual(a, b);
-
   assert.deepStrictEqual(b, a);
-  bsert.deepStrictEqual(b, a);
 
   assert.throws(() => {
     assert.notDeepStrictEqual(a, b);
   });
 
   assert.throws(() => {
-    bsert.notDeepStrictEqual(a, b);
-  });
-
-  bsert.throws(() => {
-    assert.notDeepStrictEqual(a, b);
-  });
-
-  bsert.throws(() => {
-    bsert.notDeepStrictEqual(a, b);
-  });
-
-  assert.throws(() => {
-    assert.notDeepStrictEqual(b, a);
-  });
-
-  assert.throws(() => {
-    bsert.notDeepStrictEqual(b, a);
-  });
-
-  bsert.throws(() => {
-    assert.notDeepStrictEqual(b, a);
-  });
-
-  bsert.throws(() => {
-    bsert.notDeepStrictEqual(b, a);
+    assert.notDeepStrictEqual(b, b);
   });
 }
 
 function notEqual(a, b) {
   assert.notDeepStrictEqual(a, b);
-  bsert.notDeepStrictEqual(a, b);
-
   assert.notDeepStrictEqual(b, a);
-  bsert.notDeepStrictEqual(b, a);
 
   assert.throws(() => {
     assert.deepStrictEqual(a, b);
   });
 
   assert.throws(() => {
-    bsert.deepStrictEqual(a, b);
-  });
-
-  bsert.throws(() => {
-    assert.deepStrictEqual(a, b);
-  });
-
-  bsert.throws(() => {
-    bsert.deepStrictEqual(a, b);
-  });
-
-  assert.throws(() => {
     assert.deepStrictEqual(b, a);
-  });
-
-  assert.throws(() => {
-    bsert.deepStrictEqual(b, a);
-  });
-
-  bsert.throws(() => {
-    assert.deepStrictEqual(b, a);
-  });
-
-  bsert.throws(() => {
-    bsert.deepStrictEqual(b, a);
   });
 }
 
 describe('Assert', function() {
+  it('should have sanity check', async () => {
+    let err1 = null;
+    let err2 = null;
+    let err3 = null;
+    let called1 = false;
+    let called2 = false;
+
+    assert(true);
+
+    assert.throws(() => {
+      called1 = true;
+      throw new Error();
+    });
+
+    if (!called1)
+      throw new Error('Failed throws sanity check.');
+
+    await assert.rejects(async () => {
+      called2 = true;
+      throw new Error();
+    });
+
+    if (!called2)
+      throw new Error('Failed rejects sanity check.');
+
+    try {
+      assert(false);
+    } catch (e) {
+      err1 = e;
+    }
+
+    if (!err1)
+      throw new Error('Failed ok sanity check.');
+
+    try {
+      assert.throws(() => {});
+    } catch (e) {
+      err2 = e;
+    }
+
+    if (!err2)
+      throw new Error('Failed throws sanity check.');
+
+    try {
+      await assert.rejects(async () => {});
+    } catch (e) {
+      err3 = e;
+    }
+
+    if (!err3)
+      throw new Error('Failed rejects sanity check.');
+  });
+
   it('should have environment', () => {
-    assert(typeof bsert === 'function');
-    assert(bsert.assert == bsert);
-    assert(bsert.strict === bsert);
-    assert(bsert.ok == bsert);
-    assert(bsert.AssertionError)
+    assert(typeof assert === 'function');
+    assert(assert.assert == assert);
+    assert(assert.strict === assert);
+    assert(assert.ok == assert);
+    assert(assert.AssertionError)
   });
 
   it('should do assert', () => {
-    bsert({});
-    bsert('null');
-    bsert('false');
-    bsert('0');
-    bsert(true);
-    bsert(1);
+    assert({});
+    assert('null');
+    assert('false');
+    assert('0');
+    assert(true);
+    assert(1);
 
-    assert.throws(() => bsert());
-    assert.throws(() => bsert(null));
-    assert.throws(() => bsert(undefined));
-    assert.throws(() => bsert(false));
-    assert.throws(() => bsert(NaN));
-    assert.throws(() => bsert(0));
-    assert.throws(() => bsert(''));
+    assert.throws(() => assert());
+    assert.throws(() => assert(null));
+    assert.throws(() => assert(undefined));
+    assert.throws(() => assert(false));
+    assert.throws(() => assert(NaN));
+    assert.throws(() => assert(0));
+    assert.throws(() => assert(''));
   });
 
   it('should do assert.equal', () => {
-    bsert.equal(1, 1);
-    bsert.equal(true, true);
-    bsert.notEqual(null, undefined);
-    bsert.notEqual({}, {});
-    bsert.notEqual(0, '0');
-    bsert.notEqual(1, '1');
+    assert.equal(1, 1);
+    assert.equal(true, true);
+    assert.notEqual(null, undefined);
+    assert.notEqual({}, {});
+    assert.notEqual(0, '0');
+    assert.notEqual(1, '1');
 
-    assert.throws(() => bsert.notEqual(1, 1));
-    assert.throws(() => bsert.notEqual(true, true));
-    assert.throws(() => bsert.equal(false, true));
-    assert.throws(() => bsert.equal(null, undefined));
-    assert.throws(() => bsert.equal({}, {}));
-    assert.throws(() => bsert.equal(1, '1'));
+    assert.throws(() => assert.notEqual(1, 1));
+    assert.throws(() => assert.notEqual(true, true));
+    assert.throws(() => assert.equal(false, true));
+    assert.throws(() => assert.equal(null, undefined));
+    assert.throws(() => assert.equal({}, {}));
+    assert.throws(() => assert.equal(1, '1'));
   });
 
   it('should do assert.strictEqual', () => {
-    bsert.strictEqual(1, 1);
-    bsert.strictEqual(true, true);
-    bsert.notStrictEqual(null, undefined);
-    bsert.notStrictEqual({}, {});
-    bsert.notStrictEqual(0, '0');
-    bsert.notStrictEqual(1, '1');
+    assert.strictEqual(1, 1);
+    assert.strictEqual(true, true);
+    assert.notStrictEqual(null, undefined);
+    assert.notStrictEqual({}, {});
+    assert.notStrictEqual(0, '0');
+    assert.notStrictEqual(1, '1');
 
-    assert.throws(() => bsert.notStrictEqual(1, 1));
-    assert.throws(() => bsert.notStrictEqual(true, true));
-    assert.throws(() => bsert.strictEqual(false, true));
-    assert.throws(() => bsert.strictEqual(null, undefined));
-    assert.throws(() => bsert.strictEqual({}, {}));
-    assert.throws(() => bsert.strictEqual(1, '1'));
+    assert.throws(() => assert.notStrictEqual(1, 1));
+    assert.throws(() => assert.notStrictEqual(true, true));
+    assert.throws(() => assert.strictEqual(false, true));
+    assert.throws(() => assert.strictEqual(null, undefined));
+    assert.throws(() => assert.strictEqual({}, {}));
+    assert.throws(() => assert.strictEqual(1, '1'));
   });
 
   it('should do assert.fail', () => {
-    assert.throws(() => bsert.fail('foobar'), /foobar/);
+    assert.throws(() => assert.fail('foobar'), /foobar/);
   });
 
   it('should do assert.throws', () => {
-    bsert.throws(() => {
+    assert.throws(() => {
       throw new Error('foobar');
     });
 
     assert.throws(() => {
-      bsert.throws(() => {});
+      assert.throws(() => {});
     });
 
-    bsert.throws(() => {
+    assert.throws(() => {
       throw new Error('foobar');
     }, /foobar/);
 
     assert.throws(() => {
-      bsert.throws(() => {
+      assert.throws(() => {
         throw new Error('foobar');
       }, /foobaz/);
     });
 
-    bsert.throws(() => {
+    assert.throws(() => {
       throw new Error('foobar');
     }, e => /foobar/.test(e));
 
     assert.throws(() => {
-      bsert.throws(() => {
+      assert.throws(() => {
         throw new Error('foobar');
       }, e => /foobaz/.test(e));
     });
 
-    bsert.throws(() => {
+    assert.throws(() => {
       throw new RangeError('foobar');
     }, RangeError);
 
     assert.throws(() => {
-      bsert.throws(() => {
+      assert.throws(() => {
         throw new Error('foobar');
       }, RangeError);
     });
 
-    bsert.throws(() => {
+    assert.throws(() => {
       throw new RangeError('foobar');
     }, new RangeError('foobar'));
 
     assert.throws(() => {
-      bsert.throws(() => {
+      assert.throws(() => {
         throw new Error('foobar');
       }, new RangeError('foobar'));
     });
 
-    if (process.browser)
-      return;
-
-    bsert.throws(() => {
+    assert.throws(() => {
       throw new RangeError('foobar');
     }, { message: 'foobar' });
 
     assert.throws(() => {
-      bsert.throws(() => {
+      assert.throws(() => {
         throw new Error('foobar');
       }, { message: 'foobaz' });
     });
 
-    bsert.throws(() => {
+    assert.throws(() => {
       throw new RangeError('foobar');
     }, { message: /foobar/ });
 
     assert.throws(() => {
-      bsert.throws(() => {
+      assert.throws(() => {
         throw new Error('foobar');
       }, { message: /foobaz/ });
     });
   });
 
   it('should do assert.rejects', async () => {
-    await bsert.rejects(async () => {
+    await assert.rejects(async () => {
       throw new Error('foobar');
     });
 
     await assert.rejects(async () => {
-      await bsert.rejects(async () => {});
+      await assert.rejects(async () => {});
     });
 
-    await bsert.rejects(async () => {
+    await assert.rejects(async () => {
       throw new Error('foobar');
     }, /foobar/);
 
     await assert.rejects(async () => {
-      await bsert.rejects(async () => {
+      await assert.rejects(async () => {
         throw new Error('foobar');
       }, /foobaz/);
     });
 
-    await bsert.rejects(async () => {
+    await assert.rejects(async () => {
       throw new Error('foobar');
     }, e => /foobar/.test(e));
 
     await assert.rejects(async () => {
-      await bsert.rejects(async () => {
+      await assert.rejects(async () => {
         throw new Error('foobar');
       }, e => /foobaz/.test(e));
     });
 
-    await bsert.rejects(async () => {
+    await assert.rejects(async () => {
       throw new RangeError('foobar');
     }, RangeError);
 
     await assert.rejects(async () => {
-      await bsert.rejects(async () => {
+      await assert.rejects(async () => {
         throw new Error('foobar');
       }, RangeError);
     });
 
-    await bsert.rejects(async () => {
+    await assert.rejects(async () => {
       throw new RangeError('foobar');
     }, new RangeError('foobar'));
 
     await assert.rejects(async () => {
-      await bsert.rejects(async () => {
+      await assert.rejects(async () => {
         throw new Error('foobar');
       }, new RangeError('foobar'));
     });
 
-    if (process.browser)
-      return;
-
-    await bsert.rejects(async () => {
+    await assert.rejects(async () => {
       throw new RangeError('foobar');
     }, { message: 'foobar' });
 
     await assert.rejects(async () => {
-      await bsert.rejects(async () => {
+      await assert.rejects(async () => {
         throw new Error('foobar');
       }, { message: 'foobaz' });
     });
 
-    await bsert.rejects(async () => {
+    await assert.rejects(async () => {
       throw new RangeError('foobar');
     }, { message: /foobar/ });
 
     await assert.rejects(async () => {
-      await bsert.rejects(async () => {
+      await assert.rejects(async () => {
         throw new Error('foobar');
       }, { message: /foobaz/ });
     });
   });
 
   it('should do assert.ifError', () => {
-    bsert.ifError();
-    bsert.ifError(null);
+    assert.ifError();
+    assert.ifError(null);
 
     assert.throws(() => {
-      bsert.ifError(new Error('foobar'));
+      assert.ifError(new Error('foobar'));
     }, /foobar/);
 
     assert.throws(() => {
-      bsert.ifError('foobar');
+      assert.ifError('foobar');
     }, /foobar/);
   });
 
@@ -596,166 +583,112 @@ describe('Assert', function() {
     b[0].b = b;
 
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].number = 0;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].number = 1;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].string = 'fo';
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].string = 'foo';
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].buffer[2] = 8;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].buffer[2] = 3;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].time.setTime(0);
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].time.setTime(1544200539595);
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].regex = /^hello/;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].regex = /hello/;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     (new Uint8Array(a[1].arraybuffer))[2] = 8;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     (new Uint8Array(a[1].arraybuffer))[2] = 3;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].uint8array[2] = 8;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].uint8array[2] = 3;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].float32array[2] = 8;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].float32array[2] = 3;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     const args = a[1].args;
     a[1].args = {};
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].args = args;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].map.set(1, 'g');
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].map.set(1, 'a');
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].set.delete(1);
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].set.add(1);
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].array[0] = 2;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].array[0] = 1;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].object.a = 3;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].object.a = 1;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
   });
 
   it('should do deep equal (add)', () => {
@@ -763,93 +696,63 @@ describe('Assert', function() {
     const b = makeArr();
 
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].number2 = 0;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     delete a[1].number2;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].string2 = 'fo';
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     delete a[1].string2;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].regex2 = /^hello/;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     delete a[1].regex2;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].map.set(4, 'g');
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].map.delete(4);
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].set.add(17);
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].set.delete(17);
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].array.push(b);
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].array.pop();
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].object.x = 1;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     delete a[1].object.x;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
   });
 
   it('should do deep equal (remove)', () => {
@@ -857,165 +760,111 @@ describe('Assert', function() {
     const b = makeArr();
 
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     delete a[1].number;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].number = 1;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     delete a[1].string;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].string = 'foo';
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     delete a[1].buffer;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].buffer = a[2].buffer;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     delete a[1].time;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].time = a[2].time;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     delete a[1].regex;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].regex = /hello/;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     delete a[1].arraybuffer;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].arraybuffer = a[2].arraybuffer;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     delete a[1].uint8array;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].uint8array = a[2].uint8array;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     delete a[1].float32array;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].float32array = a[2].float32array;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     delete a[1].args;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].args = a[2].args;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].map.delete(1);
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].map = new Map([...a[2].map]);
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].set.delete(1);
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].set = new Set([...a[2].set]);
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].array.pop();
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].array = [...a[2].array];
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     delete a[1].object.a;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].object.a = 1;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
   });
 
   it('should do deep equal (type)', () => {
@@ -1023,250 +872,193 @@ describe('Assert', function() {
     const b = makeArr();
 
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].number = 'foo';
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].number = 1;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].string = 1;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].string = 'foo';
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].buffer = 'ha';
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].buffer = a[2].buffer;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].time = 1;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].time = a[2].time;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].regex = '';
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].regex = /hello/;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].arraybuffer = {};
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].arraybuffer = a[2].arraybuffer;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].uint8array = /foo/;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].uint8array = a[2].uint8array;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].float32array = a;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].float32array = a[2].float32array;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     const args = a[1].args;
     a[1].args = a[1].float32array;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].args = args;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].map = args;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].map = a[2].map;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].set = a[1].map;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].set = a[2].set;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].array = a[1].set;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].array = a[2].array;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
 
     a[1].object = a[1].array;
     assert.notDeepStrictEqual(a, b);
-    bsert.notDeepStrictEqual(a, b);
     assert.notDeepStrictEqual(b, a);
-    bsert.notDeepStrictEqual(b, a);
 
     a[1].object = a[2].object;
     assert.deepStrictEqual(a, b);
-    bsert.deepStrictEqual(a, b);
     assert.deepStrictEqual(b, a);
-    bsert.deepStrictEqual(b, a);
   });
 
   it('should test buffers', () => {
-    bsert.bufferEqual(Buffer.from('010203', 'hex'),
+    assert.bufferEqual(Buffer.from('010203', 'hex'),
                       Buffer.from('010203', 'hex'));
-    bsert.notBufferEqual(Buffer.from('010203', 'hex'),
+    assert.notBufferEqual(Buffer.from('010203', 'hex'),
                          Buffer.from('01020304', 'hex'));
-    bsert.notBufferEqual(Buffer.from('010203', 'hex'),
+    assert.notBufferEqual(Buffer.from('010203', 'hex'),
                          Buffer.from('0102', 'hex'));
-    bsert.notBufferEqual(Buffer.from('010203', 'hex'),
+    assert.notBufferEqual(Buffer.from('010203', 'hex'),
                          Buffer.from('020203', 'hex'));
 
     assert.throws(() => {
-      bsert.notBufferEqual(Buffer.from('010203', 'hex'),
+      assert.notBufferEqual(Buffer.from('010203', 'hex'),
                            Buffer.from('010203', 'hex'));
     });
 
     assert.throws(() => {
-      bsert.bufferEqual(Buffer.from('010203', 'hex'),
+      assert.bufferEqual(Buffer.from('010203', 'hex'),
                         Buffer.from('01020304', 'hex'));
     });
 
     assert.throws(() => {
-      bsert.bufferEqual(Buffer.from('010203', 'hex'),
+      assert.bufferEqual(Buffer.from('010203', 'hex'),
                         Buffer.from('0102', 'hex'));
     });
 
     assert.throws(() => {
-      bsert.bufferEqual(Buffer.from('010203', 'hex'),
+      assert.bufferEqual(Buffer.from('010203', 'hex'),
                         Buffer.from('020203', 'hex'));
     });
 
-    bsert.bufferEqual(Buffer.from('010203', 'hex'), '010203');
-    bsert.notBufferEqual(Buffer.from('010203', 'hex'), '01020304');
-    bsert.notBufferEqual(Buffer.from('010203', 'hex'), '0102');
-    bsert.notBufferEqual(Buffer.from('010203', 'hex'), '020203');
+    assert.bufferEqual(Buffer.from('010203', 'hex'), '010203');
+    assert.notBufferEqual(Buffer.from('010203', 'hex'), '01020304');
+    assert.notBufferEqual(Buffer.from('010203', 'hex'), '0102');
+    assert.notBufferEqual(Buffer.from('010203', 'hex'), '020203');
 
     assert.throws(() => {
-      bsert.notBufferEqual(Buffer.from('010203', 'hex'), '010203');
+      assert.notBufferEqual(Buffer.from('010203', 'hex'), '010203');
     });
 
     assert.throws(() => {
-      bsert.bufferEqual(Buffer.from('010203', 'hex'), '01020304');
+      assert.bufferEqual(Buffer.from('010203', 'hex'), '01020304');
     });
 
     assert.throws(() => {
-      bsert.bufferEqual(Buffer.from('010203', 'hex'), '0102');
+      assert.bufferEqual(Buffer.from('010203', 'hex'), '0102');
     });
 
     assert.throws(() => {
-      bsert.bufferEqual(Buffer.from('010203', 'hex'), '020203');
+      assert.bufferEqual(Buffer.from('010203', 'hex'), '020203');
     });
 
     assert.throws(() => {
-      bsert.bufferEqual(Buffer.from('010203', 'hex'), '10203');
+      assert.bufferEqual(Buffer.from('010203', 'hex'), '10203');
     });
 
     assert.throws(() => {
-      bsert.notBufferEqual(Buffer.from('010203', 'hex'), '1020304');
+      assert.notBufferEqual(Buffer.from('010203', 'hex'), '1020304');
     });
 
-    bsert.bufferEqual(Buffer.from('abc'), 'abc', 'binary');
+    assert.bufferEqual(Buffer.from('abc'), 'abc', 'binary');
   });
-
-  if (process.browser)
-    return;
 
   it('should enforce type', () => {
     const x = 1;
 
-    bsert.enforce(typeof x === 'number', 'x', 'number');
+    assert.enforce(typeof x === 'number', 'x', 'number');
 
     assert.throws(() => {
-      bsert.enforce(typeof x === 'boolean', 'x', 'boolean');
+      assert.enforce(typeof x === 'boolean', 'x', 'boolean');
     }, new TypeError('\'x\' must be a(n) boolean.'));
   });
 
   it('should check range', () => {
     const x = 1;
 
-    bsert.range(x <= 1, 'x');
+    assert.range(x <= 1, 'x');
 
     assert.throws(() => {
-      bsert.range(x > 1, 'x');
+      assert.range(x > 1, 'x');
     }, new RangeError('\'x\' is out of range.'));
   });
 });
