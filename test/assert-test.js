@@ -982,32 +982,32 @@ describe('Assert', function() {
 
   it('should test buffers', () => {
     assert.bufferEqual(Buffer.from('010203', 'hex'),
-                      Buffer.from('010203', 'hex'));
+                       Buffer.from('010203', 'hex'));
     assert.notBufferEqual(Buffer.from('010203', 'hex'),
-                         Buffer.from('01020304', 'hex'));
+                          Buffer.from('01020304', 'hex'));
     assert.notBufferEqual(Buffer.from('010203', 'hex'),
-                         Buffer.from('0102', 'hex'));
+                          Buffer.from('0102', 'hex'));
     assert.notBufferEqual(Buffer.from('010203', 'hex'),
-                         Buffer.from('020203', 'hex'));
+                          Buffer.from('020203', 'hex'));
 
     assert.throws(() => {
       assert.notBufferEqual(Buffer.from('010203', 'hex'),
-                           Buffer.from('010203', 'hex'));
+                            Buffer.from('010203', 'hex'));
     });
 
     assert.throws(() => {
       assert.bufferEqual(Buffer.from('010203', 'hex'),
-                        Buffer.from('01020304', 'hex'));
+                         Buffer.from('01020304', 'hex'));
     });
 
     assert.throws(() => {
       assert.bufferEqual(Buffer.from('010203', 'hex'),
-                        Buffer.from('0102', 'hex'));
+                         Buffer.from('0102', 'hex'));
     });
 
     assert.throws(() => {
       assert.bufferEqual(Buffer.from('010203', 'hex'),
-                        Buffer.from('020203', 'hex'));
+                         Buffer.from('020203', 'hex'));
     });
 
     assert.bufferEqual(Buffer.from('010203', 'hex'), '010203');
