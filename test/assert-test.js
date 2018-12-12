@@ -1,3 +1,7 @@
+/* eslint-env mocha */
+/* eslint prefer-arrow-callback: "off" */
+/* global BigInt */
+
 'use strict';
 
 const assert = require('../');
@@ -130,10 +134,10 @@ describe('Assert', function() {
 
   it('should have environment', () => {
     assert(typeof assert === 'function');
-    assert(assert.assert == assert);
+    assert(assert.assert === assert);
     assert(assert.strict === assert);
-    assert(assert.ok == assert);
-    assert(assert.AssertionError)
+    assert(assert.ok === assert);
+    assert(assert.AssertionError);
   });
 
   it('should do assert', () => {
@@ -411,7 +415,7 @@ describe('Assert', function() {
     notEqual(Buffer.from([2, 2, 3]), Buffer.from([1, 2, 3]));
     notEqual(Buffer.from([1, 2, 3]), [1, 2, 3]);
     notEqual(Buffer.from([1, 2, 3]), '1,2,3');
-    notEqual(Buffer.from([1, 2, 3]), { 0: 1, 0: 2, 0: 3, length: 3 });
+    notEqual(Buffer.from([1, 2, 3]), { 0: 1, 1: 2, 2: 3, length: 3 });
     notEqual(Buffer.from([1, 2, 3]), {});
 
     equal(new Date(now), new Date(now));
@@ -441,7 +445,7 @@ describe('Assert', function() {
     notEqual(new Uint8Array([1, 2, 3]).buffer, '1,2,3');
     notEqual(new Uint8Array([1, 2, 3]).buffer, {});
     notEqual(new Uint8Array([1, 2, 3]).buffer,
-             { 0: 1, 0: 2, 0: 3, length: 3 });
+             { 0: 1, 1: 2, 2: 3, length: 3 });
 
     equal(new Uint8Array([1, 2, 3]), new Uint8Array([1, 2, 3]));
     notEqual(new Uint8Array([1, 2, 3, 4]), new Uint8Array([1, 2, 3]));
@@ -451,7 +455,7 @@ describe('Assert', function() {
     notEqual(new Uint8Array([1, 2, 3]), '1,2,3');
     notEqual(new Uint8Array([1, 2, 3]), {});
     notEqual(new Uint8Array([1, 2, 3]),
-             { 0: 1, 0: 2, 0: 3, length: 3 });
+             { 0: 1, 1: 2, 2: 3, length: 3 });
 
     equal(new Float32Array([1, 2, 3]), new Float32Array([1, 2, 3]));
     notEqual(new Float32Array([1, 2, 3, 4]), new Float32Array([1, 2, 3]));
@@ -460,7 +464,7 @@ describe('Assert', function() {
     notEqual(new Float32Array([1, 2, 3]), [1, 2, 3]);
     notEqual(new Float32Array([1, 2, 3]), '1,2,3');
     notEqual(new Float32Array([1, 2, 3]),
-             { 0: 1, 0: 2, 0: 3, length: 3 });
+             { 0: 1, 1: 2, 2: 3, length: 3 });
     notEqual(new Float32Array([1, 2, 3]), {});
 
     equal(arguments, arguments);
