@@ -1053,7 +1053,7 @@ describe('Assert', function() {
 
     assert.throws(() => {
       assert.enforce(typeof x === 'boolean', 'x', 'boolean');
-    }, new TypeError('\'x\' must be a(n) boolean.'));
+    }, new TypeError('"x" must be a(n) boolean.'));
   });
 
   it('should check range', () => {
@@ -1063,6 +1063,6 @@ describe('Assert', function() {
 
     assert.throws(() => {
       assert.range(x > 1, 'x');
-    }, new RangeError('\'x\' is out of range.'));
+    }, new RangeError('"x" is out of range.'));
   });
 });
