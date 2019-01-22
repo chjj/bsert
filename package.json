@@ -1,6 +1,6 @@
 {
   "name": "bsert",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Minimal assert with type checking",
   "keywords": [
     "assert"
