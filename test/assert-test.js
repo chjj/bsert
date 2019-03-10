@@ -1046,6 +1046,34 @@ describe('Assert', function() {
     assert.bufferEqual(Buffer.from('abc'), 'abc', 'binary');
   });
 
+  it('should do deep equal with symbols', () => {
+    const a = Symbol('a');
+    const b = Symbol('b');
+    const c = Symbol('c');
+    const d = Symbol('d');
+
+    equal({
+      [a]: 1,
+      [b]: 2,
+      [c]: 3
+    }, {
+      [a]: 1,
+      [b]: 2,
+      [c]: 3
+    });
+
+    notEqual({
+      [a]: 1,
+      [b]: 2,
+      [c]: 3,
+      [d]: 4
+    }, {
+      [a]: 1,
+      [b]: 2,
+      [c]: 3
+    });
+  });
+
   it('should enforce type', () => {
     const x = 1;
 
