@@ -6,10 +6,10 @@
     "assert"
   ],
   "license": "MIT",
-  "repository": "git://github.com/chjj/bsert.git",
-  "homepage": "https://github.com/chjj/bsert",
+  "repository": "git://github.com/bcoin-org/bsert.git",
+  "homepage": "https://github.com/bcoin-org/bsert",
   "bugs": {
-    "url": "https://github.com/chjj/bsert/issues"
+    "url": "https://github.com/bcoin-org/bsert/issues"
   },
   "author": "Christopher Jeffrey <chjjeffrey@gmail.com>",
   "main": "./lib/assert.js",
